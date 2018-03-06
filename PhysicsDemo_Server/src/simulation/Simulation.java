@@ -14,7 +14,8 @@ public class Simulation {
     private Box inner_1;
     private Box inner_2;
     private Lock lock;
-    
+    private int score1;
+    private int score2;
     private Box score_1;
     private Box score_2;
     
@@ -123,6 +124,7 @@ public class Simulation {
         newShapes.add(inner_2.getShape());
         newShapes.add(ball.getShape());
         return newShapes;
+        
     }
     
     public void updateShapes()
@@ -131,4 +133,14 @@ public class Simulation {
         inner_2.updateShape();
         ball.updateShape();
     }
+    
+    public void getScore(double time){
+        if(score_1.Intersection(ball.getRay(), time) == true){
+            score1++;
+        }else if(score_2.Intersection(ball.getRay(),time)==false){
+            score2++;
+        }
+    }
+    
 }
+
