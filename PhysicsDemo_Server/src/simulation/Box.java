@@ -90,4 +90,25 @@ public class Box {
         r.setX(x);
         r.setY(y);
     }
+    
+    public boolean Intersection(Ray in,double time){
+        Point intersection = null;
+        for(int n = 0;n < walls.size();n++)
+        {
+            LineSegment seg = in.toSegment(time);
+            intersection = walls.get(n).intersection(seg);
+            if(intersection != null)
+            {
+                // If it intersects, find out when
+                //double t = in.getTime(intersection);
+                // Reflect the Ray off the line segment
+                //Ray newRay = walls.get(n).reflect(seg,in.speed);
+                // Figure out where we end up after the reflection.
+                //Point dest = newRay.endPoint(time-t);
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
