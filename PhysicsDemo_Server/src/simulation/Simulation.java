@@ -27,8 +27,8 @@ public class Simulation {
         score_2.setColor();
         inner_2 = new Box(width - 60, height - 40, 80, 40, true);
         lock = new ReentrantLock();
-        score_1 = new Box(width/2 - 60, 0, 120, 40, false);
-        score_2 = new Box(width/2 - 60, 0, 120, 40, false);       
+        score_1 = new Box(width/2 - 60, 0, 120, 40, true);
+        score_2 = new Box(width/2 - 60, 0, 120, 40, true);       
     }
     
     public void evolve(double time)
