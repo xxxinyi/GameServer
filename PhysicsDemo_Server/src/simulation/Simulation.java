@@ -11,24 +11,30 @@ import physics.*;
 public class Simulation {
     private Box outer;
     private Ball ball;
-    private Box inner;
+    private Box inner_1;
     private Box inner_2;
     private Lock lock;
+    
+    private Box score_1;
+    private Box score_2;
     
     public Simulation(int width,int height,int dX,int dY)
     {
         outer = new Box(0,0,width,height,false);
         ball = new Ball(width/2,height/2,dX,dY);
-        inner = new Box(width - 60,height - 40, 40, 20,true);
-        inner.setColor();
+        inner_1 = new Box(width - 60, height - 40, 40, 20,true);
+        inner_1.setColor();
+        score_2.setColor();
         inner_2 = new Box(width - 60, height - 40, 80, 40, true);
         lock = new ReentrantLock();
+        score_1 = new Box(width/2 - 60, 0, 120, 40, false);
+        score_2 = new Box(width/2 - 60, 0, 120, 40, false);       
     }
     
     public void evolve(double time)
     {
         lock.lock();
-        Ray newLoc = inner.bounceRay(ball.getRay(), time);
+        Ray newLoc = inner_1.bounceRay(ball.getRay(), time);
         if(newLoc != null)
             ball.setRay(newLoc);
         else {
@@ -46,18 +52,18 @@ public class Simulation {
         lock.lock();
         int dX = deltaX;
         int dY = deltaY;
-        if(inner.x + deltaX < 0)
-          dX = -inner.x;
-        if(inner.x + inner.width + deltaX > outer.width)
-          dX = outer.width - inner.width - inner.x;
+        if(inner_1.x + deltaX < 0)
+          dX = -inner_1.x;
+        if(inner_1.x + inner_1.width + deltaX > outer.width)
+          dX = outer.width - inner_1.width - inner_1.x;
        
-        if(inner.y + deltaY < 0)
-           dY = -inner.y;
-        if(inner.y + inner.height + deltaY > outer.height)
-           dY = outer.height - inner.height - inner.y;
+        if(inner_1.y + deltaY < 0)
+           dY = -inner_1.y;
+        if(inner_1.y + inner_1.height + deltaY > outer.height)
+           dY = outer.height - inner_1.height - inner_1.y;
         
-        inner.move(dX,dY);
-        if(inner.contains(ball.getRay().origin)) {
+        inner_1.move(dX,dY);
+        if(inner_1.contains(ball.getRay().origin)) {
             // If we have discovered that the box has just jumped on top of
             // the ball, we nudge them apart until the box no longer
             // contains the ball.
@@ -66,10 +72,10 @@ public class Simulation {
             int bumpY = -1;
             if(dY < 0) bumpY = 1;
             do {
-            inner.move(bumpX, bumpY);
+            inner_1.move(bumpX, bumpY);
             ball.getRay().origin.x += -bumpX;
             ball.getRay().origin.y += -bumpY;
-            } while(inner.contains(ball.getRay().origin));
+            } while(inner_1.contains(ball.getRay().origin));
         }
         lock.unlock();
     }
@@ -111,7 +117,9 @@ public class Simulation {
     {
         ArrayList<Shape> newShapes = new ArrayList<Shape>();
         newShapes.add(outer.getShape());
-        newShapes.add(inner.getShape());
+        newShapes.add(score_1.getShape());
+        newShapes.add(score_2.getShape());
+        newShapes.add(inner_1.getShape());
         newShapes.add(inner_2.getShape());
         newShapes.add(ball.getShape());
         return newShapes;
@@ -119,7 +127,8 @@ public class Simulation {
     
     public void updateShapes()
     {
-        inner.updateShape();
+        inner_1.updateShape();
+        inner_2.updateShape();
         ball.updateShape();
     }
 }
